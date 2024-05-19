@@ -24,26 +24,30 @@ class Poly:
             self.inNTT = domain
     #
 
+    def self_i(self):
+        st = self
+        return st
+
     def __str__(self):
 
-        pstr = str(self.F[0])
-        tmp = min(self.n,8)
+        #pstr = str(self.F[0])
+        #tmp = min(self.n,8)
 
-        for i in range(1,tmp):
-            pstr = pstr+" + "+str(self.F[i])+"*x^"+str(i)
+        #for i in range(1,tmp):
+            #pstr = pstr+" + "+str(self.F[i])+"*x^"+str(i)
 
-        if self.n > 8:
-            pstr = pstr + " + ..."
-            return pstr
+        #if self.n > 8:
+            #pstr = pstr + " + ..."
+            #return pstr
 
-       #p1 = str(self.n)
-       #p2 = str(self.q)
-       #p3 = str(self.np)
-       #p4 = str(self.F)
-       #p5 = str(self.inNTT)
+        p1 = str(self.n)
+        p2 = str(self.q)
+        p3 = str(self.np)
+        p4 = str(self.F)
+        p5 = str(self.inNTT)
 
-       #pstr = [p1, p2, p3, p4, p5]
-       #return str(pstr)
+        pstr = [p1, p2, p3, p4, p5]
+        return str(pstr)
 
     #
 

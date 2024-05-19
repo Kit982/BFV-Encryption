@@ -1,6 +1,8 @@
 from BFV import *
 from poly import *
 from helper import *
+import json
+import socket
 
 
 def _serializer(x):
@@ -8,13 +10,29 @@ def _serializer(x):
         return {'n': x.n, 'q': x.q, 'np': x.np, 'F': x.F, 'inNTT': x.inNTT}
         #return x.__dict__
 
+
+class TestEncoder(json.JSONEncoder):
+    def default(self, o):
+        return {"n": o.n, "q": o.q, "np": o.np, "F": o.F, "inNTT": o.inNTT}
+
+
 def decode_(dct):
     if "__poly__" in dct:
         return Poly.__str__(dct)
     return dct
 
-import json
-import socket
+
+def poly_to_str(pol):
+    # return str(pol)
+    return {'n': pol.n, 'q': pol.q, 'np': pol.np, 'F': pol.F, 'inNTT': pol.inNTT}
+
+
+def str_to_poly(str1):
+    return Poly.self_i(str1)
+
+
+#import json
+#import socket
 
 
 from random import randint
@@ -116,12 +134,42 @@ print("")
 ct1 = Evaluator.Encryption(m1)
 ct2 = Evaluator.Encryption(m2)
 
+print(type(ct1))
+# print(ct1[0])
+print("")
+
+ct_11 = poly_to_str(ct1[0])
+ct_12 = poly_to_str(ct1[1])
+ct_21 = poly_to_str(ct1[0])
+ct_22 = poly_to_str(ct1[1])
+# print(ct_11)
+
+poly_11 = str_to_poly(ct_11)
+poly_12 = str_to_poly(ct_12)
+poly_21 = str_to_poly(ct_21)
+poly_22 = str_to_poly(ct_22)
+
+print(type(poly_12))
+print("")
+
+# print(vars(ct1[0]))
+# db = Poly.toPOL(poly_11)
+# print(db)
+
 print("--- ct1 and ct2 in json.")
-data = {"x": ct1, "y": ct2, "id": 1, "__poly__": 1}
-json_data = json.dumps(data, default=_serializer)
+data = {"x": [ct_11, ct_12], "y": [ct_21, ct_22], "id": 1} #, "__poly__": 1}
+json_data = json.dumps(data)#, cls=TestEncoder)#default=_serializer)
 # print(json_data)
+print(type(json_data))
 print("")
 json_info = json.loads(json_data)#, object_hook=decode_)
+print(type(json_info["x"]))
+print("")
+#print(json_info["x"])
+
+#xjson = Poly.__str__(json_info["x"])
+#yjson = Poly.__str__(json_info["y"])
+
 # print(json_info["x"])
 print("")
 # print(json_data)
@@ -148,10 +196,15 @@ print("")
 
 
 print(type(ct1[0]))
-print(type(json_info))
+print(type(json_info["x"]))
+print("")
 # Homomorphic Addition
-ct = Evaluator.HomomorphicAddition(ct1,ct2)
+ct = Evaluator.HomomorphicAddition(ct1, ct2)
+# ct = Evaluator.HomomorphicAddition(xjson, yjson)
 # ct = Evaluator.HomomorphicAddition(str(json_info["x"]), str(json_info["y"]))
+
+print(type(ct[0]))
+print("")
 mt = Evaluator.Decryption(ct)
 
 nr = Evaluator.IntDecode(mt) 
