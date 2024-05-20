@@ -121,16 +121,16 @@ def start():
         server_response = response.json()
 
         # todo вставить расшифрование x и y
-        print(server_response['result'])
-        # result_poly = jsonpickle.decode(server_response['result'])
-        # mt = Evaluator.Decryption(result_poly)
+        # print(server_response['result'])
+        result_poly = jsonpickle.decode(server_response['result'])
+        mt = Evaluator.Decryption(result_poly)
         # mt = Evaluator.Decryption(server_response['result'])
 
-        # nr = Evaluator.IntDecode(mt)
+        nr = Evaluator.IntDecode(mt)
 
         print(f"Ответ для задачи {server_response['id']}")
-        # print(f"{x} + {y} = {nr}")
-        print(f"{x} + {y} = {server_response['result']}")
+        print(f"{x} + {y} = {nr}")
+        #print(f"{x} + {y} = {server_response['result']}")
 
 
 if __name__ == '__main__':
