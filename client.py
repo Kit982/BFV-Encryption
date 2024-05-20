@@ -112,7 +112,11 @@ def start():
 
         # todo вставить расшифрование x и y
         result_poly = jsonpickle.decode(server_response['result'])
-        mt = Evaluator.Decryption(result_poly)
+
+        if ord(operat) == 42:
+            mt = Evaluator.DecryptionV2(result_poly)
+        else:
+            mt = Evaluator.Decryption(result_poly)
 
         nr = Evaluator.IntDecode(mt)
 

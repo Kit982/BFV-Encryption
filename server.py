@@ -95,7 +95,7 @@ def compute_summ(x, y, expression=None):
 
 def compute_mult(x, y, expression=None):
     ct_mult = Evaluator.HomomorphicMultiplication(x, y)
-    ct_mult = Evaluator.RelinearizationV2(ct_mult)
+    # ct_mult = Evaluator.RelinearizationV2(ct_mult)
     return ct_mult
 
 
