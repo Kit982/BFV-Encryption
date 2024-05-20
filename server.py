@@ -83,11 +83,20 @@ def get_task(id):
         )
 
 
-def compute(x, y, expression=None):
-    # todo добавить вычисление своей функции
-    ct = Evaluator.HomomorphicAddition(x, y)
-    return ct
-    # return x + y
+def compute_sub(x, y, expression=None):
+    ct_sub = Evaluator.HomomorphicSubtraction(x, y)
+    return ct_sub
+
+
+def compute_summ(x, y, expression=None):
+    ct_summ = Evaluator.HomomorphicAddition(x, y)
+    return ct_summ
+
+
+def compute_mult(x, y, expression=None):
+    ct_mult = Evaluator.HomomorphicMultiplication(x, y)
+    ct_mult = Evaluator.RelinearizationV2(ct_mult)
+    return ct_mult
 
 
 # отправка данных для вычисления
@@ -97,17 +106,24 @@ def start_computing(data=Body()):
     task_id = data["id"]
     x_value = data["x"]
     y_value = data["y"]
+    op = data["operation"]
 
     tasks.append(task_id)
-    # print(x_value)
 
-
-    # todo добавить извлечение функции для вычисления
     pol_1 = jsonpickle.decode(x_value)
     pol_2 = jsonpickle.decode(y_value)
 
     # todo добавить своё вычислеие
-    result = compute(pol_1, pol_2)
+    if ord(op) == 45:
+        result = compute_sub(pol_1, pol_2)
+    elif ord(op) == 43:
+        result = compute_summ(pol_1, pol_2)
+    elif ord(op) == 42:
+        result = compute_mult(pol_1, pol_2)
+    else:
+        print("Incorrect operation")
+        exit(11)
+
     result_1 = jsonpickle.encode(result)
 
     tasks.remove(task_id)
