@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Body, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 
 from BFV import *
 from poly import *
 from helper import *
 from client import *
+import jsonpickle
 
 # условная база данных выполняемых задач
 tasks = []
@@ -56,11 +57,16 @@ def start_computing(data=Body()):
     y_value = data["y"]
 
     tasks.append(task_id)
+    print(x_value)
+
 
     # todo добавить извлечение функции для вычисления
+    pol_1 = jsonpickle.decode(x_value)
+    pol_2 = jsonpickle.decode(y_value)
 
     # todo добавить своё вычислеие
-    result = compute(x_value, y_value)
+    result = compute(pol_1, pol_2)
+    result_1 = jsonpickle.encode(result)
 
     tasks.remove(task_id)
 
@@ -68,6 +74,6 @@ def start_computing(data=Body()):
         status_code=status.HTTP_200_OK,
         content={
             "id": f"{task_id}",
-            "result": f"{result}"
+            "result": f"{result_1}"
         }
     )

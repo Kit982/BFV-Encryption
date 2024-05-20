@@ -3,6 +3,7 @@ from poly import *
 from helper import *
 import json
 import socket
+import jsonpickle
 
 
 def _serializer(x):
@@ -29,10 +30,6 @@ def poly_to_str(pol):
 
 def str_to_poly(str1):
     return Poly.self_i(str1)
-
-
-#import json
-#import socket
 
 
 from random import randint
@@ -111,7 +108,7 @@ print(Evaluator)
 # Generate random message
 # n1, n2 = 15, -5
 # n1, n2 = randint(-(2**15),2**15-1), randint(-(2**15),2**15-1)
-n1, n2 = 145, 56
+n1, n2 = 129, 59
 
 print("--- Integers n1 and n2.")
 print("* n1: {}".format(n1))
@@ -134,8 +131,18 @@ print("")
 ct1 = Evaluator.Encryption(m1)
 ct2 = Evaluator.Encryption(m2)
 
-print(type(ct1))
+print(type(ct1[0]))
 # print(ct1[0])
+print("")
+
+Ct1 = jsonpickle.encode(ct1)
+Ct2 = jsonpickle.encode(ct2)
+# print(type(Ct1))
+# print("")
+
+Pol1 = jsonpickle.decode(Ct1)
+Pol2 = jsonpickle.decode(Ct2)
+print(Pol1[0])
 print("")
 
 ct_11 = poly_to_str(ct1[0])
@@ -157,7 +164,8 @@ print("")
 # print(db)
 
 print("--- ct1 and ct2 in json.")
-data = {"x": [ct_11, ct_12], "y": [ct_21, ct_22], "id": 1} #, "__poly__": 1}
+# data = {"x": [ct_11, ct_12], "y": [ct_21, ct_22], "id": 1} #, "__poly__": 1}
+data = {"x": Ct1, "y": Ct2, "id": 1}
 json_data = json.dumps(data)#, cls=TestEncoder)#default=_serializer)
 # print(json_data)
 print(type(json_data))
@@ -199,7 +207,7 @@ print(type(ct1[0]))
 print(type(json_info["x"]))
 print("")
 # Homomorphic Addition
-ct = Evaluator.HomomorphicAddition(ct1, ct2)
+ct = Evaluator.HomomorphicAddition(Pol1, Pol2)
 # ct = Evaluator.HomomorphicAddition(xjson, yjson)
 # ct = Evaluator.HomomorphicAddition(str(json_info["x"]), str(json_info["y"]))
 
@@ -207,7 +215,8 @@ print(type(ct[0]))
 print("")
 mt = Evaluator.Decryption(ct)
 
-nr = Evaluator.IntDecode(mt) 
+nr = Evaluator.IntDecode(mt)
+# nr1 = nr - 88
 ne = (n1+n2) 
 
 print("--- Performing ct_add = Enc(m1) + Enc(m2)")

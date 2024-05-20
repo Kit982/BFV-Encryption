@@ -1,6 +1,7 @@
 from BFV import *
 from poly import *
 from helper import *
+import jsonpickle
 
 
 import sys
@@ -95,19 +96,22 @@ def start():
 
         ct1 = Evaluator.Encryption(m1)
         ct2 = Evaluator.Encryption(m2)
-        print(ct1[0])
-        print(ct2)
+        # print(ct1[0])
+        # print(ct2)
 
-        ct_11 = poly_to_str(ct1[0])
-        ct_12 = poly_to_str(ct1[1])
-        ct_21 = poly_to_str(ct1[0])
-        ct_22 = poly_to_str(ct1[1])
+        # ct_11 = poly_to_str(ct1[0])
+        # ct_12 = poly_to_str(ct1[1])
+        # ct_21 = poly_to_str(ct1[0])
+        # ct_22 = poly_to_str(ct1[1])
+
+        ct_1 = jsonpickle.encode(ct1)
+        ct_2 = jsonpickle.encode(ct2)
 
         # создание запроса
         request_structure = {
             "id": task_id,
-            "x": [ct_11, ct_12],
-            "y": [ct_21, ct_22]
+            "x": ct_1,
+            "y": ct_2
         }
 
         # отправка запроса
@@ -117,6 +121,9 @@ def start():
         server_response = response.json()
 
         # todo вставить расшифрование x и y
+        print(server_response['result'])
+        # result_poly = jsonpickle.decode(server_response['result'])
+        # mt = Evaluator.Decryption(result_poly)
         # mt = Evaluator.Decryption(server_response['result'])
 
         # nr = Evaluator.IntDecode(mt)
